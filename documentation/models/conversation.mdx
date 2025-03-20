@@ -1,0 +1,19 @@
+---
+title: Conversation
+description: "Represents a conversation object."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+Related Services: [ConversationService.cs](../services/conversationservice)
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Id`|`string`|Identifying `Guid`|
+|`Tool`|`string`|Which Numa tool/component the conversation applies to (i.e., Sermon Search)|
+|`ParticipantUserIds`|`List<string>`|List of users' Ids included in the conversation|
+|`Title`|`string`|3-5 word description of the conversation's first message|
+|`LastMessage`|`string`|Content of the conversation's last `Message`|
+|`CreatedDatetime`|`DateTime`|When the conversation was started|
+|`CreatedByUserId`|`string`|Id of the `User` who started the conversation|
+|`UpdatedDatetime`|`DateTime`|When the conversation was last updated|

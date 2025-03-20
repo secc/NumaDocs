@@ -1,0 +1,44 @@
+---
+title: Markdown Service
+description: "Wraps the [MarkDig SDK](https://github.com/xoofx/markdig) for handling markdown."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Interfaces: `IMarkdownService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_pipeline`|`MarkdownPipeline`|MarkDig pipeline for handling a markdown string|
+
+## Constructor
+```csharp
+public MarkdownService()
+{
+    _pipeline = new MarkdownPipelineBuilder()
+        .UseAdvancedExtensions()
+        .UseSoftlineBreakAsHardlineBreak()
+        .Build();
+}
+```
+
+## Properties
+`MarkdownService` does not have any properties.
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`ConvertMarkdownToHtml`|Applies `_pipeline` to convert markdown to HTML|`string`|`string`|
+|`AddSuperscriptCitations`|Replaces `[doc#]` notation with superscripted citation numbers|`string`|`string`|
+
+## IMarkdownService.cs
+```csharp
+namespace Numa.Interfaces
+{
+    public interface IMarkdownService
+    {
+        string ConvertMarkdownToHtml( string markdown );
+        string AddSuperscriptCitations( string markdown );
+    }
+}
+```

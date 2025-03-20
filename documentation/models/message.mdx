@@ -1,0 +1,18 @@
+---
+title: Message
+description: "Represents a message object associated with a conversation."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+Related Services: [MessageService.cs](../services/messageservice)
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Id`|`string`|Identifying `Guid`|
+|`IsSystem`|`bool`|When the message is system-generated (`true`) or user-generated (`false`)|
+|`SenderUserId`|`string?`|Id of the `User` who sent the message|
+|`SermonCollectionId`|`string`|Id of the `SermonCollection` being queried|
+|`ConversationId`|`string`|Id of the `Conversation` to which the message belongs|
+|`Content`|`string`|The message's raw, markdown text|
+|`CreatedDatetime`|`DateTime`| When the message was created|

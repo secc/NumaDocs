@@ -1,0 +1,103 @@
+---
+title: App Architecture
+description: "Numa includes fully extensible components, models, services, and interfaces."
+---
+
+## Project Structure
+`Numa.sln` is organized into `components`, `models`, `services`, and `interfaces`. The project root contains:
+
+  - `Components/` - Contains reusable Razor components
+    - `Layout/` - Contains layout components for page structures
+      - `MainLayout.razor` - Defines the main layout of the application
+    - `Pages/` - Contains Razor pages for routing
+      - `SermonSearch.razor` - Defines a page or component for SermonSearch
+      - `SermonSearch.razor.cs` - Code-behind logic for `SermonSearch.razor`
+    - `Routes.razor` - Configures application routes and navigation
+    - `App.razor` - The root component of the application
+  - `Models/` - Contains data models representing entities
+    - `User.cs` - Represents the `User` data model
+  - `Services/` - Contains services that handle business logic
+    - `UserService.cs` - Handles user-related operations and logic
+  - `Interfaces/` - Defines contracts for services and components
+    - `IUserService.cs` - Interface for user service functionality
+  - `wwwroot/` - Contains static files like CSS, JS, and images
+  - `.env` - Stores environment variables for configuration
+  - `Program.cs` - Entry point for application initialization
+  - `Numa.sln` - Solution file that organizes the project
+
+
+## Implementing SDKs
+As a best practice, Numa wraps all external SDKs in custom services to ensure scalability and easy future integration with additional SDKs.
+
+#### Examples:
+|SDK|Wrapped by Numa Service|
+|:---|:---|
+| Azure OpenAI | `ChatService.cs` |
+| Azure Storage | `DocumentStorageService.cs` |
+| Markdig | `MarkdownService.cs` |
+
+## Dependency Injection
+Numa's services are registered in `Program.cs`, available to be injected into any component.
+
+```csharp
+// Register the custom Numa services
+builder.Services.AddScoped<IMessageService, MessageService>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISermonCollectionService, SermonCollectionService>();
+builder.Services.AddSingleton<IGroupService, GroupService>();
+builder.Services.AddSingleton<ICitationService, CitationService>();
+builder.Services.AddSingleton<IAdminSettingsService, AdminSettingsService>();
+builder.Services.AddSingleton<IChatService, ChatService>( sp => { return new ChatService( azureOpenAiEndpoint, azureOpenAiKey, azureAiSearchEndpoint, azureAiSearchKey ); });
+builder.Services.AddSingleton<IDocumentStorageService, DocumentStorageService>( sp => { return new DocumentStorageService( azureStorageConnectionString ); } );
+builder.Services.AddSingleton<IMarkdownService, MarkdownService>();
+```
+Injection occurs in the Razor components' code-behind file (i.e., `SermonSearch.razor.cs`).
+```csharp
+public partial class SermonSearch : ComponentBase
+{
+    #region Dependency Injection of Services
+    [Inject]
+    private IConversationService ConversationService { get; set; } = default!;
+    [Inject]
+    private IMessageService MessageService { get; set; } = default!;
+    [Inject]
+    private IChatService ChatService { get; set; } = default!;
+    #endregion
+}
+```
+
+## Handling Secrets
+A `.env` file is used to store `TENANT_ID`, `APP_CLIENT_ID`, `APP_CLIENT_SECRET`, `KV_URL`, and `ASPNETCORE_ENVIRONMENT`.
+```env
+TENANT_ID=<Azure Subscription Tenant Id>
+APP_CLIENT_ID=<Id of the registered app in Microsoft Entra Id>
+APP_CLIENT_SECRET=<Secret of the registered app in Microsoft Entra Id>
+KV_URL=<Azure Key Vault endpoint>
+ASPNETCORE_ENVIRONMENT=<'Development' or 'Production' for error handling>
+```
+
+In `Program.cs`, the credentials from `.env` are used to authenticate with [Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/general/overview), which securely stores the secrets required to access Azure cloud resources.
+```csharp
+// Authenticate a SecretClient using the Service Principal credentials
+var kvClient = new SecretClient(
+    new Uri( keyVaultUrl ),
+    new ClientSecretCredential( tenantId, numaClientId, numaClientSecret )
+);
+
+KeyVaultSecret kvsAzureOpenAiEndpoint = kvClient.GetSecret( "AZURE-OPENAI-ENDPOINT" );
+string azureOpenAiEndpoint = kvsAzureOpenAiEndpoint.Value;
+
+KeyVaultSecret kvsAzureOpenAiKey = kvClient.GetSecret( "AZURE-OPENAI-KEY" );
+string azureOpenAiKey = kvsAzureOpenAiKey.Value;
+
+KeyVaultSecret kvsAzureAiSearchEndpoint = kvClient.GetSecret( "AZURE-AI-SEARCH-ENDPOINT" );
+string azureAiSearchEndpoint = kvsAzureAiSearchEndpoint.Value;
+
+KeyVaultSecret kvsAzureAiSearchKey = kvClient.GetSecret( "AZURE-AI-SEARCH-KEY" );
+string azureAiSearchKey = kvsAzureAiSearchKey.Value;
+
+//Register the custom Numa services
+builder.Services.AddSingleton<IChatService, ChatService>( sp => { return new ChatService( azureOpenAiEndpoint, azureOpenAiKey, azureAiSearchEndpoint, azureAiSearchKey ); });
+builder.Services.AddSingleton<IDocumentStorageService, DocumentStorageService>( sp => { return new DocumentStorageService( azureStorageConnectionString ); } );
+```

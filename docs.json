@@ -1,102 +1,105 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Numa Docs",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#5E35B1",
+    "light": "#5E35B1",
+    "dark": "#5E35B1"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/logo/NumaLogo.png",
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Guides",
-        "groups": [
+        "group": "Get Started",
+        "pages": [
+          "getstarted/overview",
+          "getstarted/how-to-self-host",
+          "getstarted/estimated-costs"
+        ]
+      },
+      {
+        "group": "Documentation",
+        "pages": [
+          "documentation/architecture/tech-stack",
           {
-            "group": "Get Started",
-            "pages": [
-              "introduction",
-              "quickstart",
-              "development"
-            ]
+            "group": "Architecture",
+            "pages": ["documentation/architecture/app-architecture",
+            "documentation/architecture/cloud-architecture"]
           },
           {
-            "group": "Essentials",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/settings",
-              "essentials/navigation",
-              "essentials/reusable-snippets"
-            ]
+            "group": "Components",
+            "pages": ["documentation/components/numacomponents",
+            "documentation/components/sermonsearch",
+            "documentation/components/managedocuments",
+            "documentation/components/adminsettings",
+            "documentation/components/mainlayout",
+            "documentation/components/navmenu",
+            "documentation/components/routes",
+            "documentation/components/app"]
+          },
+          {
+            "group": "Models",
+            "pages": ["documentation/models/numamodels",
+            "documentation/models/numacontext",
+            "documentation/models/user", 
+            "documentation/models/conversation",
+            "documentation/models/message", 
+            "documentation/models/citation",
+            "documentation/models/sermoncollection",
+            "documentation/models/group",
+            "documentation/models/adminsettings"]
+          },
+          {
+            "group": "Services",
+            "pages": ["documentation/services/numaservices",
+            "documentation/services/userservice", 
+            "documentation/services/conversationservice",
+            "documentation/services/messageservice",
+            "documentation/services/citationservice",
+            "documentation/services/sermoncollectionservice",
+            "documentation/services/groupservice",   
+            "documentation/services/adminsettingsservice", 
+            "documentation/services/chatservice", 
+            "documentation/services/markdownservice",
+            "documentation/services/documentstorageservice"]
           }
         ]
       },
       {
-        "tab": "API Reference",
-        "groups": [
-          {
-            "group": "API Documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint Examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
+        "group": "Release Notes",
+        "pages": [
+          "releasenotes/releases",
+          "releasenotes/v1.1.0-beta",
+          "releasenotes/v1.0.0"
         ]
       }
     ],
     "global": {
       "anchors": [
         {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Community",
-          "href": "https://mintlify.com/community",
-          "icon": "slack"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
+          "anchor": "Numa Source Code",
+          "href": "https://github.com/secc/Numa",
+          "icon": "github"
         }
       ]
     }
   },
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "/logo/NumaLogo.png",
+    "dark": "/logo/NumaLogo.png"
   },
   "navbar": {
     "links": [
       {
         "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "href": "mailto:applications@secc.org"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
+    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/secc/Numa"
     }
   }
 }

@@ -1,0 +1,18 @@
+---
+title: Citation
+description: "Represents a citation object associated with a RAG response."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+Related Services: [CitationService.cs](../services/citationservice)
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Id`|`string`|Identifying `Guid`|
+|`MessageId`|`string`|Id of the associated `Message`|
+|`ConversationId`|`string`|Id of the associated `Conversation`|
+|`DocNumber`|`int`|The index of the citation from an associated message's list of retrieved citations|
+|`Content`|`string`|The chunk of text associated with the citation|
+|`Title`|`string`|The title of the chunk associated with the citation|
+|`Url`|`string`|The source URL of transcript associated with the citation|

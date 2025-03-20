@@ -1,0 +1,30 @@
+---
+title: App 
+description: "`App.razor` is the root component of the Blazor Server application; it loads CSS, JS, and handles cascading authentication to the app."
+---
+
+Component Name: `App.razor`    
+Version: `1.0.0`
+
+## Dependencies
+Services: <br /> [AdminSettingsService](../services/adminsettingsservice)
+
+## Lifecycle Methods
+```csharp
+protected override async Task OnInitializedAsync()
+{
+    await AdminSettingsService.InitializeCurrentAdminSettingsAsync();
+}
+```
+
+## Cascading Authentication
+```csharp
+<body>
+    //Authentication is provided by the Microsoft Entra Id service registered in Program.cs
+    <CascadingAuthenticationState>
+        <Routes @rendermode="InteractiveServer" /> //Setting the render mode of the Blazor app 
+    </CascadingAuthenticationState>
+
+    //JS scripts
+</body>
+```

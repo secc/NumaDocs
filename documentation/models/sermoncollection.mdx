@@ -1,0 +1,22 @@
+---
+title: Sermon Collection
+description: "Represents a curated collection of sermons."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+Related Services: [SermonCollectionService.cs](../services/sermoncollectionservice)
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Id`|`string`|Identifying `Guid`|
+|`Name`|`string?`|Display name for the sermon collection|
+|`IndexIdentifier`|`string?`|Index name for the sermon collection|
+|`Description`|`string?`|Description of the sermon collection|
+|`ImageSrc`|`string?`|Relative URL to sermon collection's display image|
+|`IsPublic`|`bool`|Whether the collection is public (`true`) or private (`false`)|
+|`IsDeleted`|`bool`|Indicates if the sermon collection is deleted|
+|`AllowedGroupIds`|`List<string>?`|A list of identifying `Guid` associated with groups that are allowed to query against the sermon collection|
+|`UploadPermissionsGroupId`|`string?`|`Guid` of the group with upload permissions for the sermon collection |
+|`CreatedDatetime`|`DateTime?`|When sermon collection was created|
+|`CreatedByUserId`|`string?`|Id of the `User` who created the sermon collection|

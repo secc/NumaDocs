@@ -1,0 +1,29 @@
+---
+title: Nav Menu
+description: "Navigation menu component used in the `MainLayout.razor`."
+---
+
+Component Name: `NavMenu.razor`    
+Version: `1.0.0`
+
+## Dependencies
+Services: <br />[UserService](../services/userservice), [GroupService](../services/groupservice), [AdminSettingsService](../services/adminsettingsservice)
+
+## Variables
+| Variable Name | Type   | Description |  
+| :-------------- | :------ | :----------- |
+|`_uploadPermissionsGroupId`|`string`|`Guid` of the general upload permissions group| 
+|`_userInUploadPermissionsGroup`|`bool`|Indicates whether current user is in the general upload permission group| 
+
+## Lifecycle Methods
+```csharp
+protected override async Task OnInitializedAsync()
+{
+    await UserService.InitializeCurrentUserAsync();
+
+    if ( UserService.CurrentUser != null )
+    {
+        _userInUploadPermissionsGroup = await GroupService.UserIsInGroup( UserService.CurrentUser.Id, _uploadPermissionsGroupId );
+    }
+}
+```

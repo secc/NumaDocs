@@ -1,0 +1,47 @@
+---
+title: Admin Settings Service
+description: "Handles logic related to the `AdminSettings` model & the configuration of app-wide settings."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Models: [AdminSettings.cs](../models/adminsettings)<br />
+Related Interfaces: `IAdminSettingsService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_dbContextFactory`|`IDbContextFactory<NumaContext>`|`DbContextFactory` for instantiating instances of `NumaContext` on-demand|
+
+## Constructor
+```csharp
+public AdminSettingsService( IDbContextFactory<NumaContext> dbContextFactory )
+{
+    _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException( nameof( dbContextFactory ) );
+}
+```
+
+## Properties
+| Property Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`CurrentAdminSettings`|`AdminSettings?`|Object to represent the state of the current admin settings|
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`InitializeCurrentAdminSettingsAsync`|Sets `CurrentAdminSettings` to the admin settings stored in Cosmos DB||`Task`|
+|`SaveCurrentAdminSettingsAsync`|Saves changes to the admin settings in Cosmos DB||`Task`|
+
+## IAdminSettingsService.cs
+```csharp
+using Numa.Models;
+
+namespace Numa.Interfaces
+{
+    public interface IAdminSettingsService
+    {
+        AdminSettings? CurrentAdminSettings { get; }
+        Task InitializeCurrentAdminSettingsAsync();
+        Task SaveCurrentAdminSettingsAsync();
+    }
+}
+```

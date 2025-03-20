@@ -1,0 +1,52 @@
+---
+title: Sermon Collection Service
+description: "Handles logic related to the `SermonCollection` model."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Models: [SermonCollection.cs](../models/sermoncollection)<br />
+Related Interfaces: `ISermonCollectionService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_dbContextFactory`|`IDbContextFactory<NumaContext>`|`DbContextFactory` for instantiating instances of `NumaContext` on-demand|
+
+## Constructor
+```csharp
+public SermonCollectionService( IDbContextFactory<NumaContext> dbContextFactory )
+{
+    _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException( nameof( dbContextFactory ) );
+}
+```
+
+## Properties
+`SermonCollectionService` does not have any properties.
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`GetSermonCollectionsByUserIdAsync`|Gets all sermon collections available to the current user|`string`|`Task<IEnumerable<SermonCollection>>`|
+|`GetSermonCollectionsByUploadPermissionsAsync`|Gets all sermon collections that can have new sermons uploaded||`Task<IEnumerable<SermonCollection>>`|
+|`GetAllPublicSermonCollectionsAsync`|Gets all public sermon collections that are not deleted||`Task<IEnumerable<SermonCollection>>`|
+|`GetImageSrcByIdAsync`|Gets the `ImageSrc` of a sermon collection; returns the relative path of the thumbnail image, if it has one|`string`|`Task<string?>`|
+|`GetNameByIdAsync`|Gets the `Name` of a sermon collection|`string`|`Task<string>`|
+|`GetIndexIdentifierByIdAsync`|Gets the `IndexIdentifier` of a sermon collection|`string`|`Task<string>`|
+
+## ISermonCollectionService.cs
+```csharp
+using Numa.Models;
+
+namespace Numa.Interfaces
+{
+    public interface ISermonCollectionService
+    {
+        Task<IEnumerable<SermonCollection>> GetSermonCollectionsByUserIdAsync( string userId );
+        Task<IEnumerable<SermonCollection>> GetSermonCollectionsByUploadPermissionsAsync();
+        Task<string?> GetImageSrcByIdAsync( string sermonCollectionId );
+        Task<string> GetNameByIdAsync( string sermonCollectionId );
+        Task<IEnumerable<SermonCollection>> GetAllPublicSermonCollectionsAsync();
+        Task<string> GetIndexIdentifierByIdAsync( string sermonCollectionId );
+    }
+}
+```

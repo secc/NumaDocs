@@ -1,0 +1,196 @@
+---
+title: Sermon Search
+description: "Numa's flagship tool allows users to chat with collections of past sermons."
+---
+
+Component Name: `SermonSearch.razor`    
+Version: `1.0.0`
+
+<img
+  src="sermonsearch-demo.png"
+  alt="Sermon Search Conversation Screenshot"
+/>
+
+## Dependencies
+Services: <br />[AdminSettingsService](../services/adminsettingsservice), [UserService](../services/userservice), [SermonCollectionService](../services/sermoncollectionservice), [ConversationService](../services/conversationservice), [MessageService](../services/messageservice), [ChatService](../services/chatservice), [MarkdownService](../services/markdownservice), [CitationService](../services/citationservice), [AuthenticationStateProvider](https://learn.microsoft.com/en-us/aspnet/core/blazor/security/authentication-state?view=aspnetcore-8.0&pivots=server), [JS](https://learn.microsoft.com/en-us/aspnet/core/blazor/javascript-interoperability/?view=aspnetcore-8.0), [Snackbar](https://mudblazor.com/api/snackbarservice#pages)
+
+## Variables
+| Variable Name | Type   | Description |  
+| :-------------- | :------ | :----------- |  
+| `_conversations`   | `List<Conversation>` | List of conversations available to the current user |  
+| `_messages`   | `List<Message>` | List of messages to display in chat |
+| `_sermonCollections`   | `IEnumerable<SermonCollection>` | Sermon collections available to the current user |
+| `_messageCollectionImageSrc`   | `Dictionary<string, string>` | Dictionary of image metadata for `_sermonCollections` |
+| `_messageCollectionNames`   | `Dictionary<string, string>` | Dictionary of name metadata for `_sermonCollections` |
+| `_citations`   | `Dictionary<string, List<citation>>` | Dictionary of current conversation's citations, organized by message |
+| `_userInputRef` |`MudTextField<string>` | Represents the user input text field element |
+| `_chatContainer` |`MudItem` | Represents the container element that wraps chat area |
+| `_chatClient` |`ChatClient?` | An Azure Open AI `ChatClient` from `ChatService` |
+| `_deploymentName` |`string` | Name of the Azure Open AI model deployment |
+| `_activeSermonCollectionId` |`string` | State of currently selected sermon collection's Id |
+| `_activeConversationId` |`string` | State of currently selected conversation's Id |
+| `_activeCitationId` |`string` | State of currently selected citation's Id |
+| `_activeCitationTitle` |`string` | State of currently selected citation's title |
+| `_activeCitationContent` |`string` | State of currently selected citation's content |
+| `_activeCitationUrl` |`string` | State of the currently selected citation's source URL |
+| `_userInputValue` |`string` | State of the user input text field |
+| `_appLogoSrc` |`string` | Relative link to app logo |
+| `_activeTabPanelIndex` |`int` | Index indicating which `MudTabPanel` is active (Citation or Chat History) |
+| `_loading` |`bool` | Indicates when component is in a loading state |
+| `_drawerOpen` |`bool` | Indicates whether the right side drawer is open or closed |
+| `_anchor` |`Anchor` | Positioning anchor for right side drawer |
+
+## Lifecycle Methods
+```csharp
+protected override async Task OnInitializedAsync()
+{
+    if ( UserService.CurrentUser == null )
+    {
+        await UserService.InitializeCurrentUserAsync();
+        await OnInitializedAsync();
+    }
+    else
+    {
+        _conversations = await ConversationService.GetConversationsByUserIdAsync( UserService.CurrentUser.Id );
+        _sermonCollections = await SermonCollectionService.GetSermonCollectionsByUserIdAsync( UserService.CurrentUser.Id );
+        _appLogoSrc = AdminSettingsService.CurrentAdminSettings?.AppLogoSrc ?? "";
+        _deploymentName = AdminSettingsService.CurrentAdminSettings?.DeploymentName ?? "";
+        _chatClient = ChatService.GetChatClient( _deploymentName );
+    }
+}
+
+protected override async Task OnAfterRenderAsync( bool firstRender )
+{
+    if ( _messages.Count > 0 )
+    {
+        await ScrollToBottom();
+    }
+}
+```
+
+## Runtime Methods
+#### StartNewConversationAsync(`string`, `bool`, `int`)
+When there is no active conversation, this method calls several other methods to start a new conversation using the `inputMessage` as the first message. 
+```csharp
+private async Task StartNewConversationAsync( string inputMessage, bool isOpeningPrompt = false, int openingPromptIndex = 0 )
+```
+
+#### BuildNewConversation(`string`)
+Instantiates a `Conversation` object using `inputMessage` as the `Conversation.LastMessage`. 
+```csharp
+private async Task<Conversation> BuildNewConversation( string inputMessage )
+```
+
+#### BuildStartingMessage(`Conversation`, `bool`, `int`)
+Instantiates a `Message` object using `newConversation`. 
+```csharp
+private Message BuildStartingMessage( Conversation newConversation, bool isOpeningPrompt = false, int openingPromptIndex = 0 )
+```
+
+#### GenerateConversationTitle(`string`)
+Uses `ChatService` to generate an appropriate 3-5 word title, given the first message in a conversation. 
+```csharp
+private async Task<string> GenerateConversationTitle( string inputMessage )
+```
+
+#### SendMessage()
+Checks if `_activeSermonCollectionId` is empty. If not, this method will either call `StartNewConversationAsync` or call several methods (including `GenerateStreamingResponse`) to add the message to the active conversation & stream a response.
+```csharp
+private async Task SendMessage()
+```
+
+#### BuildUserMessage()
+Instantiates a new `Message` object from user's input.
+```csharp
+private Message BuildUserMessage()
+```
+
+#### GenerateStreamingResponse(`string`, `string`)
+Instantiates a new system `Message` object, prompts Azure Open AI via `ChatService` using `userMessage` & `sermonCollectionId`, and asynchronously fills the new system message with a streaming response.
+```csharp
+private async Task GenerateStreamingResponse( string userMessage, string sermonCollectionId )
+```
+
+#### HandleKeyDown(`KeyboardEventArgs`)
+Monitors for user to press `Enter`, triggering a `SendMessage` call.
+```csharp
+private async Task HandleKeyDown( KeyboardEventArgs e )
+```
+
+#### SaveCitationsFromChatContext(`List<ChatMessageContext>`, `string`, `string`)
+Asynchronous method to handle retrieving citations' information from a streamed response & uses `CitationService.AddNewCitationsAsync` to save them to Cosmos DB.
+```csharp
+private async Task SaveCitationsFromChatContext( List<ChatMessageContext> chatContext, string messageId, string conversationId )
+```
+
+#### TrimCitationContent(`string`, `string`)
+Used to trim excess metadata off of a citation when `ShowCitation` is called
+```csharp
+private string TrimCitationContent( string content, string title )
+```
+
+#### ShowCitation(`Citation`)
+Set the state variables for displaying the active citation, given a `Citation` object.
+```csharp
+private void ShowCitation( Citation citation )
+```
+
+#### SetActiveConversation(`string`)
+Sets `_activeSermonCollectionId` to the sermon collection of the last message & calls `ConversationService.SetActiveConversationByIdAsync()`. 
+```csharp
+private async Task SetActiveConversation( string conversationId )
+```
+
+#### UpdateMessageDictionaries()
+Sets `_messageCollectionImageSrc` and `_messageCollectionNames`.
+```csharp
+private async Task UpdateMessageDictionaries()
+```
+
+#### GetConversationClass(string)
+Determines the class applied to conversations in the Conversation History `MudTabPanel`.
+```csharp
+private string GetConversationClass( string conversationId )
+```
+
+#### ToggleDrawer(`Anchor`)
+Toggles the right side drawer open & closed.
+```csharp
+private void ToggleDrawer( Anchor anchor )
+```
+
+#### ShowStartScreen()
+Clears `_messages` & sets the active conversation to `null`; returns the user to the start screen for a new conversation.
+```csharp
+private void ShowStartScreen()
+```
+
+#### ClearAndFocusInputAsync()
+Clears `_userInputValue` and focuses on the user input text field `_userInputRef`.
+```csharp
+private async Task ClearAndFocusInputAsync()
+```
+
+#### ToggleLoading()
+Toggles `_loading` between `true` and `false`
+```csharp
+private void ToggleLoading()
+```
+
+#### StripHtmlTags(`string`)
+Removes all HTML tags from `input` string.
+```csharp
+private string StripHtmlTags( string input )
+```
+
+#### ScrollToBottom()
+JS interop function to keep chat area scrolled to the conversation's most recent message.
+```csharp
+private async Task ScrollToBottom()
+```
+
+#### copyToClipboard(`string`)
+JS interop function to copy all HTML content from a system message onto user's clipboard; used in the 'Copy' action button.
+```csharp
+private async Task copyToClipboard( string htmlString )
+```

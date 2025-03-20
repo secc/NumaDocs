@@ -1,0 +1,44 @@
+---
+title: Citation Service
+description: "Handles logic related to the `Citation` model."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Models: [Citation.cs](../models/citation)<br />
+Related Interfaces: `ICitationService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_dbContextFactory`|`IDbContextFactory<NumaContext>`|`DbContextFactory` for instantiating instances of `NumaContext` on-demand|
+
+## Constructor
+```csharp
+public CitationService( IDbContextFactory<NumaContext> dbContextFactory )
+{
+    _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException( nameof( dbContextFactory ) );
+}
+```
+
+## Properties
+`CitationService` does not have any properties.
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`AddNewCitationsAsync`|Adds multiple citations to the Cosmos DB|`List<Citation>`|`Task`|
+|`GetCitationsByConversdationIdAsync`|Gets the citations associated with each `Message` in a `Conversation`|`string`,`List<Message>`|`Task<Dictionary<string, List<Citation>>>`|
+
+## ICitationService.cs
+```csharp
+using Numa.Models;
+
+namespace Numa.Interfaces
+{
+    public interface ICitationService
+    {
+        Task AddNewCitationsAsync( List<Citation> citations );
+        Task<Dictionary<string, List<Citation>>> GetCitationsByConversdationIdAsync( string conversationId, List<Message> messages );
+    }
+}
+```

@@ -1,0 +1,42 @@
+---
+title: Estimated Costs
+description: "Self-hosting means that you have greater control over the cost to run Numa."
+---
+## Development Infrastructure
+A development environment is suitable for 1-5 light users.<br />
+Estimated Cost: **$95 /month**
+| Service              | Pricing Tier                  | Estimated Monthly Cost |
+|----------------------|-----------------------------|------------------------|
+| Azure Key Vault     | Free                         | < $0.01               |
+| Azure App Service   | Free                         | < $0.01               |
+| Azure App Service Plan | Free                     | < $0.01               |
+| Azure Storage       | Standard                     | < $0.01               |
+| Azure Cosmos DB     | Serverless                   | < $0.01               |
+| Azure OpenAI        | Pay-As-You-Go (API)          | < $20                 |
+| Azure AI Search     | Basic (for semantic search)  | < $75                 |
+
+## Production Infrastructure
+A production environment is suitable for 10+ regular users.<br />
+Estimated Cost: **$210 - 380 /month + token usage**
+
+| Service              | Pricing Tier                         | Estimated Monthly Cost |
+|:---------------------|:-----------------------------------|:-----------------------|
+| Azure Key Vault     | Free                               | < $0.01               |
+| Azure App Service   | Free                               | < $0.01               |
+| Azure Storage       | Standard                           | < $5                  |
+| Azure Cosmos DB     | Serverless or Provisioned         | < $15                 |
+| Azure App Service Plan | Basic B2 or Premium v3 P0V3    | < $115                |
+| Azure OpenAI<sup>*</sup>       | Pay-As-You-Go (API)               | < $2.50 - 10 per 1M tokens |
+| Azure AI Search<sup>*</sup>    | Basic or Standard S1             | < $75 - 245          |
+
+<sup>*</sup>At scale, two factors drive higher costs: 1) The number/size of indexes in Azure AI Search. 2) Input token usage in Azure OpenAI.
+
+<CardGroup cols={1}>
+  <Card
+    title="Ready to start building?"
+    icon="code-fork"
+    href="how-to-self-host"
+  >
+    Learn how to self-host Numa in Microsoft Azure.
+  </Card>
+</CardGroup>
