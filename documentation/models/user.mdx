@@ -1,0 +1,17 @@
+---
+title: User
+description: "Represents a user object."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+Related Services: [UserService.cs](../services/userservice)
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Id`|`string`|Identifying `Guid`|
+|`NameIdentifier`|`string`| Identifier from `ClaimsPrincipal` in Microsoft Entra Id |
+|`FirstName`|`string`|User's first name|
+|`LastName`|`string`|User's last name|
+|`IsAdmin`|`bool`|Whether user is an admin|
+|`CreatedDatetime`|`DateTime`|When user was created|

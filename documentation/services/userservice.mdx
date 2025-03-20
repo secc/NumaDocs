@@ -1,0 +1,50 @@
+---
+title: User Service
+description: "Handles logic related to the `User` model."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Models: [User.cs](../models/user)<br />
+Related Interfaces: `IUserService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_dbContextFactory`|`IDbContextFactory<NumaContext>`|`DbContextFactory` for instantiating instances of `NumaContext` on-demand|
+|`_authenticationStateProvider`|`AuthenticationStateProvider`|Provider for authentication state, registered in `Program.cs`|
+
+## Constructor
+```csharp
+public UserService( IDbContextFactory<NumaContext> dbContextFactory, AuthenticationStateProvider authenticationStateProvider )
+{
+    _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException( nameof( dbContextFactory ) );
+    _authenticationStateProvider = authenticationStateProvider ?? throw new ArgumentNullException( nameof( authenticationStateProvider ) );
+}
+```
+
+## Properties
+| Property Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`CurrentUser`|`User?`|Object to represent the state of the current user|
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`InitializeCurrentUserAsync`|Initializes the value of `CurrentUser`||`Task`|
+|`GetOrCreateUserAsync`|Gets or creates a new `User` from a `ClaimsPrincipal`|`ClaimsPrincipal`|`Task<User>`|
+
+## IUserService.cs
+```csharp
+using Numa.Models;
+using System.Security.Claims;
+
+namespace Numa.Interfaces
+{
+    public interface IUserService
+    {
+        User? CurrentUser { get; }
+        Task InitializeCurrentUserAsync();
+        Task<User> GetOrCreateUserAsync( ClaimsPrincipal principal );
+    }
+}
+```

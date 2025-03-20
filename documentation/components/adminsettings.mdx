@@ -1,0 +1,80 @@
+---
+title: Admin Settings
+description: "Admin Settings is where Numa's branding & start screens are configured."
+---
+
+Component Name: `AdminSettings.razor`    
+Version: `1.0.0`
+
+<img
+  src="adminsettings-demo.png"
+  alt="Admin Settings Screenshot"
+/>
+
+## Dependencies
+Services: <br />[AdminSettingsService](../services/adminsettingsservice), [UserService](../services/userservice), [SermonCollectionService](../services/sermoncollectionservice), [Snackbar](https://mudblazor.com/api/snackbarservice#pages)
+
+## Variables
+| Variable Name | Type   | Description |  
+| :-------------- | :------ | :----------- |
+|`_appLogoSrc`|`string?`|Relative URL of the app's logo|
+|`_appName`|`string?`|Custom name for the app| 
+|`_deploymentName`|`string?`|Name of deployed model in Azure Open AI; used app-wide for generative AI queries| 
+|`_missionStatement`|`string?`|Mission statement branding for the AI workspace| 
+|`_uploadPermissionsGroupId`|`string?`|`Guid` of the general upload permissions group| 
+|`_openingPrompts`|`List<string>?`|List of opening prompts displayed on Sermon Search start screen| 
+|`_openingPromptIds`|`List<string>?`|List of sermon collection identifiers associated with `_openingPrompts`| 
+|`_publicSermonCollections`|`IEnumerable<SermonCollection>`|List of publicly accessible sermon collections (selectable for opening prompts)|   
+
+## Lifecycle Methods
+```csharp
+protected override async Task OnInitializedAsync()
+{
+    if ( AdminSettingsService.CurrentAdminSettings != null )
+    {
+        _appLogoSrc = AdminSettingsService.CurrentAdminSettings.AppLogoSrc;
+        _appName = AdminSettingsService.CurrentAdminSettings.AppName;
+        _deploymentName = AdminSettingsService.CurrentAdminSettings.DeploymentName;
+        _missionStatement = AdminSettingsService.CurrentAdminSettings.MissionStatement;
+        _uploadPermissionsGroupId = AdminSettingsService.CurrentAdminSettings.UploadPermissionsGroupId;
+        _openingPrompts = AdminSettingsService.CurrentAdminSettings.OpeningPrompts;
+        _openingPromptIds = AdminSettingsService.CurrentAdminSettings.OpeningPromptIds;
+        await UserService.InitializeCurrentUserAsync();
+
+        if ( UserService.CurrentUser != null )
+        {
+            _publicSermonCollections = await SermonCollectionService.GetAllPublicSermonCollectionsAsync();
+        }
+    }
+    else
+    {
+        await AdminSettingsService.InitializeCurrentAdminSettingsAsync();
+        await OnInitializedAsync();
+    }
+}
+```
+
+## Runtime Methods
+#### UploadAppLogo(`IBrowserFile`)
+Handles file picking, uploading, & storing the relative URL of a new app logo.
+```csharp
+private async Task UploadAppLogo( IBrowserFile file )
+```
+
+#### RemoveOpeningPrompt(`int`)
+Removes a Sermon Search opening prompt at a specified `index` in `_openingPrompts`
+```csharp
+private void RemoveOpeningPrompt( int index )
+```
+
+#### AddOpeningPrompt()
+Adds a Sermon Search opening prompt at the end of `_openingPrompts`
+```csharp
+private void AddOpeningPrompt()
+```
+
+#### SaveSettings()
+Uses `AdminSettingsService` to save all admin settings in Azure Cosmos DB, as they are currently set.
+```csharp
+private async void SaveSettings()
+```

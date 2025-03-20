@@ -1,0 +1,80 @@
+---
+title: Manage Documents
+description: "A component that allows users to upload new sermons to sermon collections."
+---
+
+Component Name: `ManageDocuments.razor`    
+Version: `1.0.0`
+
+<img
+  src="managedocuments-demo.png"
+  alt="Manage Documents Screenshot"
+/>
+
+## Dependencies
+Services: <br />[AdminSettingsService](../services/adminsettingsservice), [UserService](../services/userservice), [SermonCollectionService](../services/sermoncollectionservice), [GroupService](../services/groupservice), [DocumentStorageService](../services/documentstorageservice), [Snackbar](https://mudblazor.com/api/snackbarservice#pages)
+
+## Variables
+| Variable Name | Type   | Description |  
+| :-------------- | :------ | :----------- |  
+| `_uploadPermissionsGroupId`   | `string` | The `Guid` of the general upload permissions group, retrieved from `AdminSettings` | 
+| `_userInUploadPermissionsGroup`   | `bool` | Indicates whether current user has general upload permissions |  
+| `_uploadCollection`   | `string` | The `IndexIdentifier` of the sermon collection selected for uploading files |  
+| `_dragClass`   | `string` | The class applied when dragging & dropping a file |  
+| `_fileNames`   | `List<string>` | A list of the drag & dropped files' names |  
+| `_fileUpload`   | `MudFileUpload<IReadOnlyList<IBrowserFile>>?` | A representation of the `MudFileUpload` element that handles uploading files |  
+| `_filesToUpload`   | `List<IBrowserFile>` | A list of `IBrowserFile`, each of which will need to be opened in a read stream & uploaded to Azure storage |  
+| `_sermonCollectionsUploadAccess`   | `IEnumerable<SermonCollection>` | The sermon collections that are available for uploading files |    
+
+## Lifecycle Methods
+```csharp
+protected override async Task OnInitializedAsync()
+{
+    await UserService.InitializeCurrentUserAsync();
+
+    if ( UserService.CurrentUser != null )
+    {
+        _uploadPermissionsGroupId = AdminSettingsService.CurrentAdminSettings?.UploadPermissionsGroupId ?? "";
+        _userInUploadPermissionsGroup = await GroupService.UserIsInGroup( UserService.CurrentUser.Id, _uploadPermissionsGroupId );
+    }
+
+    _sermonCollectionsUploadAccess = await SermonCollectionService.GetSermonCollectionsByUploadPermissionsAsync();
+}
+```
+
+## Runtime Methods
+#### ClearAsync()
+Clears the selected files from the upload box.
+```csharp
+private async Task ClearAsync()
+```
+
+#### OpenFilePickerAsync()
+Opens the local computer's file picker.
+```csharp
+private Task OpenFilePickerAsync()
+```
+
+#### OnInputFileChanged(`InputFileChangeEventArgs`)
+Sets `_fileNames` and `_filesToUpload` when selected files change.
+```csharp
+private void OnInputFileChanged( InputFileChangeEventArgs e )
+```
+
+#### Upload()
+Opens a read stream for each file in `_filesToUpload` and calls `DocumentStorageService.UploadBlobAsync` to upload them to Azure Storage in the container associated with `_uploadCollection`.
+```csharp
+private async void Upload()
+```
+
+#### SetDragClass()
+Sets `_dragClass` to include a border.
+```csharp
+private void SetDragClass()
+```
+
+#### ClearDragClass()
+Sets `_dragClass` to default.
+```csharp
+private void ClearDragClass()
+```

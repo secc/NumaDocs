@@ -1,0 +1,25 @@
+---
+title: Tech Stack
+description: "Numa is a .NET 8 Blazor Server application that leverages MudBlazor for a modern UI and Azure cloud services for AI & data storage."
+---
+
+## App Stack
+|Module|Purpose|
+|:--|:--|
+|[Blazor Server App (.NET 8)](https://learn.microsoft.com/en-us/aspnet/core/blazor/?view=aspnetcore-8.0)|C# and Razor components with a persistent SignalR connection to the server|
+|[MudBlazor](https://mudblazor.com/)|UI Library for Blazor apps|
+|[Azure SDK](https://learn.microsoft.com/en-us/dotnet/azure/sdk/azure-sdk-for-dotnet)|C# classes to access key vault secrets|
+|[Azure OpenAI SDK](https://learn.microsoft.com/en-us/dotnet/api/overview/azure/ai.openai-readme?view=azure-dotnet)|C# classes to stream AI-generated responses|
+|[Markdig](https://github.com/xoofx/markdig)|C# classes to handle the markdown responses from Azure OpenAI|
+
+## Cloud Stack
+|Service|Purpose|
+|:--|:--|
+|[Microsoft Entra ID](https://docs.azure.cn/en-us/entra/identity/)|Authenticating internal staff users|
+|[Azure Key Vault](https://learn.microsoft.com/en-us/azure/key-vault/general/overview)|Securing app secrets|
+|[Azure Storage](https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction)|Storing files (blobs)|
+|[Azure AI Search](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search)|Indexing files as smaller chunks & using vectorized semantic search|
+|[Azure OpenAI](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview)|RAG responses using indexes from Azure AI Search|
+|[Azure Cosmos DB](https://learn.microsoft.com/en-us/azure/cosmos-db/)|Storing app-level data (i.e., messages, conversations, user permissions, etc.)|
+|[Azure App Service](https://learn.microsoft.com/en-us/azure/app-service/)|A managed web app service for hosting Numa|
+|[Azure App Service Plan](https://learn.microsoft.com/en-us/azure/app-service/overview-hosting-plans)|Scalable hosting for one or more Azure App Services|

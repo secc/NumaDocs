@@ -1,0 +1,54 @@
+---
+title: Numa Context
+description: "Represents Numa's Cosmos DB context."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Users`|`DbSet<User>`|Entity Framework container for Users|
+|`Conversations`|`DbSet<Conversation>`|Entity Framework container for Conversations|
+|`Messages`|`DbSet<Message>`|Entity Framework container for Messages|
+|`Groups`|`DbSet<Group>`|Entity Framework container for Groups|
+|`AdminSettings`|`DbSet<AdminSettings>`Entity Framework container for Admin Settings|
+|`SermonCollections`|`DbSet<SermonCollection>`|Entity Framework container for Sermon Collections|
+|`Citations`|`DbSet<Citation>`|Entity Framework container for Citations|
+
+## Mapping & Partition Key Configuration
+```csharp
+// Configure model mappings and partition keys
+protected override void OnModelCreating( ModelBuilder modelBuilder )
+{
+    base.OnModelCreating( modelBuilder );
+
+    // User entity configuration (PartitionKey = NameIdentifier)
+    modelBuilder.Entity<User>().ToContainer( "Users" );  // Cosmos container name for Users
+    modelBuilder.Entity<User>().HasPartitionKey( u => u.NameIdentifier );  // Partition key for Users (using NameIdentifier)
+
+    // Conversation entity configuration (PartitionKey = UserId)
+    modelBuilder.Entity<Conversation>().ToContainer( "Conversations" );  // Cosmos container name for Conversations
+    modelBuilder.Entity<Conversation>().HasPartitionKey( c => c.CreatedByUserId );  // Partition key for Conversations (using UserId)
+
+    // Message entity configuration (PartitionKey = ConversationId)
+    modelBuilder.Entity<Message>().ToContainer( "Messages" );  // Cosmos container name for Messages
+    modelBuilder.Entity<Message>().HasPartitionKey( m => m.ConversationId );  // Partition key for Messages (using ConversationId)
+
+    // Group entity configuration (PartitionKey = GroupType)
+    modelBuilder.Entity<Group>().ToContainer( "Groups" );  // Cosmos container name for Groups
+    modelBuilder.Entity<Group>().HasPartitionKey( g => g.GroupType );  // Partition key for Groups (using GroupType)
+
+    // AdminSettings entity configuration (PartitionKey = AppName)
+    modelBuilder.Entity<AdminSettings>().ToContainer( "AdminSettings" );  // Cosmos container name for AdminSettings
+    modelBuilder.Entity<AdminSettings>().HasPartitionKey( adsett => adsett.AppName );  // Partition key for AdminSettings (using AppName)
+
+    // SermonCollection entity configuration (PartitionKey = CreatedByUserId)
+    modelBuilder.Entity<SermonCollection>().ToContainer( "SermonCollections" );  // Cosmos container name for SermonCollections
+    modelBuilder.Entity<SermonCollection>().HasPartitionKey( sc => sc.CreatedByUserId );  // Partition key for SermonCollections (using CreatedByUserId)
+
+    // Citation entity configuration (PartitionKey = MessageId)
+    modelBuilder.Entity<Citation>().ToContainer( "Citations" );  // Cosmos container name for Citations
+    modelBuilder.Entity<Citation>().HasPartitionKey( ci => ci.MessageId );  // Partition key for SermonCollections (using MessageId)
+}
+```

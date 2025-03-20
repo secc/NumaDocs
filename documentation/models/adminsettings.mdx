@@ -1,0 +1,22 @@
+---
+title: Admin Settings
+description: "Represents an object containing admin settings."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+Related Services: [AdminSettingsService.cs](../services/adminsettingsservice)
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Id`|`string`|Identifying `Guid`|
+|`AppLogoSrc`|`string?`|Relative URL of the app logo|
+|`AppName`|`string?`|Custom name of the app|
+|`DeploymentName`|`string?`|Name of deployed model in Azure Open AI|
+|`MissionStatement`|`string?`|Custom mission statement branding for the AI workspace|
+|`OpeningPrompts`|`List<string>?`|List of opening prompts displayed on Sermon Search start screen|
+|`OpeningPromptIds`|`List<string>?`|List of sermon collection identifiers associated with `OpeningPrompts`|
+|`CreativeMode`|`bool?`|Feature flag for enabled (`true`) or disabled (`false`) creative mode|
+|`UploadPermissionsGroupId`|`string?`|`Guid` of the general upload permissions group|
+|`ModifiedDatetime`|`DateTime?`|When the admin settings were last saved|
+|`ModifiedByUserId`|`string?`|Id of the `User` who last modified the admin settings|

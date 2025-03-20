@@ -1,0 +1,40 @@
+---
+title: Group Service
+description: "Handles logic related to the `Group` model."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Models: [Group.cs](../models/group)<br />
+Related Interfaces: `IGroupService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_dbContextFactory`|`IDbContextFactory<NumaContext>`|`DbContextFactory` for instantiating instances of `NumaContext` on-demand|
+
+## Constructor
+```csharp
+public GroupService( IDbContextFactory<NumaContext> dbContextFactory )
+{
+    _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException( nameof( dbContextFactory ) );
+}
+```
+
+## Properties
+`GroupService` does not have any properties.
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`UserIsInGroup`|Checks if a specific user is in a specific group|`string`,`string`|`Task<bool>`|
+
+## IGroupService.cs
+```csharp
+namespace Numa.Interfaces
+{
+    public interface IGroupService
+    {
+        Task<bool> UserIsInGroup( string userId, string groupId );
+    }
+}
+```

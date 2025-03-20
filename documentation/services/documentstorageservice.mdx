@@ -1,0 +1,40 @@
+---
+title: Document Storage Service
+description: "Wraps the [Azure Storage SDK](https://learn.microsoft.com/en-us/azure/storage/common/storage-introduction) for storing & managing blobs."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Interfaces: `IDocumentStorageService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_connectionString`|`string`|Connection string to Azure Storage|
+
+## Constructor
+```csharp
+public DocumentStorageService( string azureStorageConnectionString )
+{
+    _connectionString = azureStorageConnectionString;
+}
+```
+
+## Properties
+`DocumentStorageService` does not have any properties.
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`GetBlobContainerClient`|Instantiates a client for a specific blob container|`string`|`BlobContainerClient`|
+|`UploadBlobAsync`|Attempts to upload a blob to a specific blob container|`string`, `string`, `Stream`|`Task<(bool IsSuccess, string ErrorMessage)>`|
+
+## IDocumentStorageService.cs
+```csharp
+namespace Numa.Interfaces
+{
+    public interface IDocumentStorageService
+    {
+        Task<(bool IsSuccess, string ErrorMessage)> UploadBlobAsync( string containerName, string fileName, Stream stream );
+    }
+}
+```

@@ -1,0 +1,56 @@
+---
+title: Chat Service
+description: "Wraps the [Azure OpenAI SDK](https://learn.microsoft.com/en-us/dotnet/api/overview/azure/ai.openai-readme?view=azure-dotnet) for generative AI responses."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Interfaces: `IChatService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_aoaiEndpoint`|`Uri`|Azure OpenAI endpoint|
+|`_aoaiKey`|`AzureKeyCredential`|Azure OpenAI key|
+|`_aaisEndpoint`|`Uri`|Azure AI Search endpoint|
+|`_aaisKey`|`AzureKeyCredential`|Azure AI Search key|
+|`_aoaiClient`|`AzureOpenAIClient`|Azure OpenAI client|
+
+## Constructor
+```csharp
+public ChatService( string azureOpenAiEndpoint, string azureOpenAiKey, string azureAiSearchEndpoint, string azureAiSearchKey )
+{
+    _aoaiEndpoint = new Uri( azureOpenAiEndpoint );
+    _aoaiKey = new AzureKeyCredential( azureOpenAiKey );
+    _aaisEndpoint = new Uri( azureAiSearchEndpoint );
+    _aaisKey = new AzureKeyCredential( azureAiSearchKey );
+    _aoaiClient = new AzureOpenAIClient( _aoaiEndpoint, _aoaiKey );
+}
+```
+
+## Properties
+`ChatService` does not have any properties.
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`GetChatClient`|Gets a `ChatClient` for a specific model deployment in Azure OpenAI |`string`|`ChatClient`|
+|`GetChatOptions`|Builds a `ChatCompletionOptions` object to set `MaxOutputTokenCount`, `Temperature`, `IndexName`, `TopNDocuments`, and `QueryType`|`string`,`int`,`int`,`float`|`ChatCompletionOptions`|
+|`GetChatMessages`|Builds a list of `ChatMessage` to provide system prompt & previous message context|`string`,`List<Message>`,`int`|`List<ChatMessage>`|
+|`GetTitleForNewConversation`|Generates a 3-5 word title for a conversation|`string`,`string`|`Task<string>`|
+
+## IChatService.cs
+```csharp
+using Numa.Models;
+using OpenAI.Chat;
+
+namespace Numa.Interfaces
+{
+    public interface IChatService
+    {
+        ChatClient GetChatClient( string deploymentName );
+        ChatCompletionOptions GetChatOptions( string indexName, int topN, int maxTokens, float temp );
+        List<ChatMessage> GetChatMessages( string systemPrompt, List<Message> currentChatMessages, int numMessages );
+        Task<string> GetTitleForNewConversation( string inputMessage, string deploymentName );
+    }
+}
+```

@@ -1,0 +1,55 @@
+---
+title: Conversation Service
+description: "Handles logic related to the `Conversation` model."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Models: [Conversation.cs](../models/conversation)<br />
+Related Interfaces: `IConversationService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_dbContextFactory`|`IDbContextFactory<NumaContext>`|`DbContextFactory` for instantiating instances of `NumaContext` on-demand|
+
+## Constructor
+```csharp
+public ConversationService( IDbContextFactory<NumaContext> dbContextFactory )
+{
+    _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException( nameof( dbContextFactory ) );
+}
+```
+
+## Properties
+| Property Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`ActiveConversation`|`Conversation?`|Object to represent the state of the currently selected conversation|
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`GetConversationsByUserIdAsync`|Gets all conversations available to user in descending order by their `UpdateDatetime`|`string`|`Task<List<Conversation>>`|
+|`SetActiveConversation`|Sets the `ActiveConversation` property using a `Conversation` object|`Conversation`|`void`|
+|`SetActiveConversationByIdAsync`|Sets the `ActiveConversation` property using a `Conversation.Id`|`string`|`Task`|
+|`SetActiveConversationToNull`|Sets the `ActiveConversation` to `null`||`void`|
+|`AddConversationAsync`|Adds a `Conversation` to the Cosmos DB|`Conversation`|`Task`|
+|`UpdateConversationLastMessage`|Updates the `LastMessage` of a `Conversation` in the Cosmos DB|`string`,`string`|`Task`|
+
+## IConversationService.cs
+```csharp
+using Numa.Models;
+
+namespace Numa.Interfaces
+{
+    public interface IConversationService
+    {
+        Conversation? ActiveConversation { get; }
+        Task<List<Conversation>> GetConversationsByUserIdAsync( string userId );
+        Task SetActiveConversationByIdAsync( string conversationId );
+        void SetActiveConversation( Conversation conversation );
+        void SetActiveConversationToNull();
+        Task AddConversationAsync( Conversation newConversation );
+        Task UpdateConversationLastMessage( string conversationId, string inputMessage );
+    }
+}
+```

@@ -1,0 +1,44 @@
+---
+title: Main Layout
+description: "Defines a reusable layout to contain `NavMenu`."
+---
+
+Component Name: `MainLayout.razor`    
+Version: `1.0.0`
+
+## Dependencies
+Services: <br />[UserService](../services/userservice), [NavManager](https://learn.microsoft.com/en-us/dotnet/api/microsoft.aspnetcore.components.navigationmanager?view=aspnetcore-8.0)
+
+## Variables
+| Variable Name | Type   | Description |  
+| :-------------- | :------ | :----------- |
+|`_theme`|`MudTheme`|Defines the app's `MudTheme`| 
+|`_navMenuOpen`|`bool`|Indicates whether nav menu is open (`true`) or closed (`false`)| 
+|`_isDarkMode`|`bool`|Indicates whether app is in dark mode (`true`) or light mode (`false`)| 
+
+## Lifecycle Methods
+```csharp
+protected override async Task OnInitializedAsync()
+{
+  await UserService.InitializeCurrentUserAsync();
+}
+```
+
+## Runtime Methods
+#### toggleNavMenu()
+Toggles `_navMenu` between `true` and `false`
+```csharp
+private void toggleNavMenu()
+```
+
+#### toggleDarkMode()
+Toggles `_isDarkMode` between `true` and `false`
+```csharp
+private void toggleDarkMode()
+```
+
+#### systemSettingsPageIsActive(`string`)
+Checks if the system settings page is currently active (for styling logic)
+```csharp
+private bool systemSettingsPageIsActive( string page )
+```

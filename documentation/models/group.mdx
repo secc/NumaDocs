@@ -1,0 +1,16 @@
+---
+title: Group
+description: "Represents a group of users (for security purposes)."
+---
+
+Namespace: [Numa.Models](numamodels)<br />
+Related Services: [GroupService.cs](../services/groupservice)
+
+## Properties
+| Property Name | Type | Description |
+|:--------------|:------|:-------------|
+|`Id`|`string`|Identifying `Guid`|
+|`Name`|`string`|Name of the group|
+|`GroupType`|`string`|Type of group (i.e., Sermon Collection Upload Permissions)|
+|`UserIds`|`List<string>`|List of users' Ids included in the group|
+|`CreatedDatetime`|`DateTime`|When the group was created|

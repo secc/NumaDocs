@@ -1,0 +1,44 @@
+---
+title: Message Service
+description: "Handles logic related to the `Message` model."
+---
+
+Namespace: [Numa.Services](numaservices)<br />
+Related Models: [Message.cs](../models/message)<br />
+Related Interfaces: `IMessageService.cs`
+
+## Fields
+| Field Name | Type | Description |
+|:-----------|:-----------|:------------|
+|`_dbContextFactory`|`IDbContextFactory<NumaContext>`|`DbContextFactory` for instantiating instances of `NumaContext` on-demand|
+
+## Constructor
+```csharp
+public MessageService( IDbContextFactory<NumaContext> dbContextFactory )
+{
+    _dbContextFactory = dbContextFactory ?? throw new ArgumentNullException( nameof( dbContextFactory ) );
+}
+```
+
+## Properties
+`MessageService` does not have any properties.
+
+## Methods
+| Method Name | Description | Parameters | Return Type |
+|:-----------|:-----------|:------------|:------------|
+|`GetMessagesByConversationIdAsync`|Gets a list of messages for a conversation in ascending order by their `CreatedDatetime`|`string`|`Task<List<Message>>`|
+|`AddMessageAsync`|Adds a message to the Cosmos DB|`Message`|`Task`|
+
+## IMessageService.cs
+```csharp
+using Numa.Models;
+
+namespace Numa.Interfaces
+{
+    public interface IMessageService
+    {
+        Task<List<Message>> GetMessagesByConversationIdAsync( string conversationId );
+        Task AddMessageAsync(Message newMessage);
+    }
+}
+```
