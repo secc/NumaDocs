@@ -1,16 +1,22 @@
 ---
 title: Numa.Models
-description: "Models are C# classes that define Numa's data structure & mirror how the data is stored in Azure Cosmos DB."
+description: "Models are C# classes that define Numa's domain entities and represent the core business objects following CLEAN architecture principles."
 ---
 
-## Models
-|Model|Purpose|
+## Domain Models
+These models represent the core business entities of the Numa domain:
+
+|Model|Purpose|Domain Concept|
+|:--|:--|:--|
+|[User](user)|Represents a user object|User identity and profile|
+|[Conversation](conversation)|Represents a conversation object|Chat session between user and AI|
+|[Message](message)|Represents a message object associated with a conversation|Individual communication unit|
+|[Citation](citation)|Represents a citation object associated with a RAG response|Source reference for AI responses|
+|[Sermon Collection](sermoncollection)|Represents a curated collection of sermons|Content organization and access|
+|[Group](group)|Represents a group of users (for security purposes)|Access control and permissions|
+|[Admin Settings](adminsettings)|Represents an object containing admin settings|Application configuration|
+
+## Data Access
+|Component|Purpose|
 |:--|:--|
-|[User](user)|Represents a user object|
-|[Conversation](conversation)|Represents a conversation object|
-|[Message](message)|Represents a message object associated with a conversation|
-|[Citation](citation)|Represents a citation object associated with a RAG response|
-|[Sermon Collection](sermoncollection)|Represents a curated collection of sermons|
-|[Group](group)|Represents a group of users (for security purposes)|
-|[Admin Settings](adminsettings)|Represents an object containing admin settings|
-|[Numa Context](numacontext)|Represents Numa's Cosmos DB context|
+|[Numa Context](numacontext)|Represents Numa's Cosmos DB context for data persistence|
