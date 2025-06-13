@@ -70,6 +70,7 @@
         "group": "Release Notes",
         "pages": [
           "releasenotes/releases",
+          "releasenotes/v1.1.0",
           "releasenotes/v1.1.0-beta",
           "releasenotes/v1.0.0"
         ]

@@ -1,29 +1,58 @@
 ---
 title: App Architecture
-description: "Numa includes fully extensible components, models, services, and interfaces."
+description: "Numa follows CLEAN architecture principles with fully extensible components, models, services, and interfaces, using a mixture of WebAssembly & Server rendering modes."
 ---
 
-## Project Structure
-`Numa.sln` is organized into `components`, `models`, `services`, and `interfaces`. The project root contains:
+## CLEAN Architecture Principles
+Numa follows CLEAN architecture principles to ensure maintainability, testability, and separation of concerns:
 
-  - `Components/` - Contains reusable Razor components
-    - `Layout/` - Contains layout components for page structures
-      - `MainLayout.razor` - Defines the main layout of the application
-    - `Pages/` - Contains Razor pages for routing
-      - `SermonSearch.razor` - Defines a page or component for SermonSearch
-      - `SermonSearch.razor.cs` - Code-behind logic for `SermonSearch.razor`
-    - `Routes.razor` - Configures application routes and navigation
-    - `App.razor` - The root component of the application
-  - `Models/` - Contains data models representing entities
-    - `User.cs` - Represents the `User` data model
-  - `Services/` - Contains services that handle business logic
-    - `UserService.cs` - Handles user-related operations and logic
-  - `Interfaces/` - Defines contracts for services and components
-    - `IUserService.cs` - Interface for user service functionality
-  - `wwwroot/` - Contains static files like CSS, JS, and images
-  - `.env` - Stores environment variables for configuration
-  - `Program.cs` - Entry point for application initialization
-  - `Numa.sln` - Solution file that organizes the project
+- **Presentation Layer**: Razor components and pages handle user interface logic
+- **Application Layer**: Services contain business logic and orchestrate data operations  
+- **Domain Layer**: Models and entities represent core business objects
+- **Infrastructure Layer**: External integrations (Azure services, databases, APIs)
+
+The architecture promotes:
+- **Dependency Inversion**: High-level modules don't depend on low-level modules
+- **Single Responsibility**: Each component has one reason to change
+- **Interface Segregation**: Services implement focused interfaces
+- **Separation of Concerns**: Clear boundaries between layers
+
+## Blazor Web App Rendering Modes
+Numa leverages Blazor Web App's flexible rendering capabilities:
+
+- **Server-side Rendering (SSR)**: Fast initial load for public pages
+- **Interactive Server**: Real-time updates via SignalR for admin features
+- **Interactive WebAssembly**: Client-side execution for rich user interactions
+- **Automatic Rendering**: Optimal rendering mode selection per component
+
+## Project Structure
+`Numa.sln` follows CLEAN architecture principles with clear separation between presentation, application, domain, and infrastructure layers:
+
+  - **Presentation Layer**
+    - `Components/` - Contains reusable Razor components
+      - `Layout/` - Contains layout components for page structures
+        - `MainLayout.razor` - Defines the main layout of the application
+      - `Pages/` - Contains Razor pages for routing with mixed rendering modes
+        - `SermonSearch.razor` - Defines a page or component for SermonSearch
+        - `SermonSearch.razor.cs` - Code-behind logic for `SermonSearch.razor`
+      - `Routes.razor` - Configures application routes and navigation
+      - `App.razor` - The root component of the Blazor Web App
+  - **Domain Layer**
+    - `Models/` - Contains data models representing core business entities
+      - `User.cs` - Represents the `User` domain model
+  - **Application Layer**
+    - `Services/` - Contains services that handle business logic and orchestration
+      - `UserService.cs` - Handles user-related operations and logic
+    - `Interfaces/` - Defines contracts for services and components
+      - `IUserService.cs` - Interface for user service functionality
+  - **Infrastructure Layer**
+    - External service integrations (Azure services, database access)
+    - Configuration and dependency injection setup
+  - **Supporting Files**
+    - `wwwroot/` - Contains static files like CSS, JS, and images
+    - `.env` - Stores environment variables for configuration
+    - `Program.cs` - Entry point for application initialization and DI container setup
+    - `Numa.sln` - Solution file that organizes the project
 
 
 ## Implementing SDKs
@@ -37,10 +66,10 @@ As a best practice, Numa wraps all external SDKs in custom services to ensure sc
 | Markdig | `MarkdownService.cs` |
 
 ## Dependency Injection
-Numa's services are registered in `Program.cs`, available to be injected into any component.
+Numa's services are registered in `Program.cs` following CLEAN architecture principles, with interfaces abstracting implementation details:
 
 ```csharp
-// Register the custom Numa services
+// Register the custom Numa application services (Application Layer)
 builder.Services.AddScoped<IMessageService, MessageService>();
 builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IUserService, UserService>();
@@ -48,11 +77,13 @@ builder.Services.AddScoped<ISermonCollectionService, SermonCollectionService>();
 builder.Services.AddSingleton<IGroupService, GroupService>();
 builder.Services.AddSingleton<ICitationService, CitationService>();
 builder.Services.AddSingleton<IAdminSettingsService, AdminSettingsService>();
+
+// Register infrastructure services with configuration
 builder.Services.AddSingleton<IChatService, ChatService>( sp => { return new ChatService( azureOpenAiEndpoint, azureOpenAiKey, azureAiSearchEndpoint, azureAiSearchKey ); });
 builder.Services.AddSingleton<IDocumentStorageService, DocumentStorageService>( sp => { return new DocumentStorageService( azureStorageConnectionString ); } );
 builder.Services.AddSingleton<IMarkdownService, MarkdownService>();
 ```
-Injection occurs in the Razor components' code-behind file (i.e., `SermonSearch.razor.cs`).
+Services are injected into Razor components using the `[Inject]` attribute in code-behind files (i.e., `SermonSearch.razor.cs`):
 ```csharp
 public partial class SermonSearch : ComponentBase
 {
