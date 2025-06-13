@@ -1,6 +1,6 @@
 ---
 title: App 
-description: "`App.razor` is the root component of the Blazor Server application; it loads CSS, JS, and handles cascading authentication to the app."
+description: "`App.razor` is the root component of the Blazor Web App; it loads CSS, JS, handles cascading authentication, and configures rendering modes for the application."
 ---
 
 Component Name: `App.razor`    
@@ -17,14 +17,21 @@ protected override async Task OnInitializedAsync()
 }
 ```
 
-## Cascading Authentication
+## Cascading Authentication & Rendering Modes
 ```csharp
 <body>
     //Authentication is provided by the Microsoft Entra Id service registered in Program.cs
     <CascadingAuthenticationState>
-        <Routes @rendermode="InteractiveServer" /> //Setting the render mode of the Blazor app 
+        <Routes @rendermode="InteractiveAuto" /> //Setting the render mode of the Blazor Web App to automatically choose between Server and WebAssembly
     </CascadingAuthenticationState>
 
     //JS scripts
 </body>
 ```
+
+## Rendering Mode Configuration
+The Blazor Web App supports multiple rendering modes:
+- **InteractiveAuto**: Automatically chooses between Server and WebAssembly based on component needs
+- **InteractiveServer**: Server-side rendering with SignalR for real-time features
+- **InteractiveWebAssembly**: Client-side execution for rich interactions
+- **Static SSR**: Server-side rendering for fast initial loads
