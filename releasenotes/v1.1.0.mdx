@@ -1,0 +1,68 @@
+---
+title: v1.1.0
+description: "v1.1.0 introduces .NET 9 Blazor Web App with CLEAN architecture principles, mixed rendering modes, and enhanced UI components."
+---
+
+## Major Architecture Upgrade
+
+### .NET 9 Blazor Web App Migration
+- **Framework Upgrade**: Migrated from .NET 8 Blazor Server App to .NET 9 Blazor Web App
+- **CLEAN Architecture**: Implemented comprehensive CLEAN architecture principles with clear layer separation:
+  - **Presentation Layer**: Razor components and pages
+  - **Application Layer**: Business logic services  
+  - **Domain Layer**: Core business entities and models
+  - **Infrastructure Layer**: External service integrations
+
+### Enhanced Rendering Capabilities
+- **Mixed Rendering Modes**: Added support for multiple rendering modes:
+  - `InteractiveAuto`: Automatic selection between Server and WebAssembly
+  - `InteractiveServer`: Real-time updates via SignalR
+  - `InteractiveWebAssembly`: Client-side execution
+  - Static SSR: Fast initial page loads
+- **Performance Optimization**: Default rendering mode changed from `InteractiveServer` to `InteractiveAuto` for optimal performance
+
+## Component Enhancements
+
+### New Features
+- 🚀 **Admin Group Management**: Admin users can now manage group members in admin settings
+- 🚀 **File Management Interface**: Users with upload permissions can view files in sermon collections  
+- 🚀 **Creative Mode**: Users can adjust creativity levels of AI-generated responses
+- 🚀 **Feedback System**: Message feedback system to monitor user sentiment
+
+### Improvements
+- ⚡ **Configuration Management**: Replaced hard-coded values in `Numa.Services` & `Numa.Components` with configurable admin settings
+- ⚡ **Service Architecture**: Enhanced dependency injection with proper interface abstractions
+- ⚡ **SDK Wrapping**: All external SDKs now wrapped in custom services for better maintainability
+
+## Bug Fixes
+- 🐛 **Query Type Configuration**: Fixed issue with `DataSourceQueryType.VectorSemanticHybrid` as default `QueryType` in `ChatService.cs`
+- 🐛 **WebSocket Latency**: Resolved erratic typing behavior in text boxes due to WebSocket latency
+- 🐛 **Input Clearing**: Fixed latency between sending messages and clearing input text box
+
+## Technical Improvements
+
+### Architecture & Code Quality
+- **Service Layer Separation**: Clear distinction between Application and Infrastructure services
+- **Domain Models**: Enhanced business entity representations with proper domain concepts
+- **Interface Design**: Improved service interfaces following SOLID principles
+- **Project Structure**: Reorganized solution to reflect CLEAN architecture layers
+
+### Cloud Integration
+- **Azure Key Vault**: Enhanced secret management with proper authentication flows
+- **Azure Services**: Optimized integrations with OpenAI, Storage, and AI Search services
+- **Configuration**: Improved environment-based configuration management
+
+## Developer Experience
+- **Documentation**: Comprehensive architecture documentation with CLEAN principles
+- **Code Organization**: Clear separation of concerns across all layers
+- **Dependency Injection**: Simplified service registration patterns
+- **SDK Management**: Consistent wrapping of external dependencies
+
+## Breaking Changes
+- **Rendering Mode**: Default rendering mode changed from `InteractiveServer` to `InteractiveAuto`
+- **Service Registration**: Updated service registration patterns in `Program.cs`
+- **Architecture**: Restructured project to follow CLEAN architecture principles
+
+---
+
+**Full Changelog**: [View on GitHub](https://github.com/secc/Numa/compare/v1.0.0...develop)
